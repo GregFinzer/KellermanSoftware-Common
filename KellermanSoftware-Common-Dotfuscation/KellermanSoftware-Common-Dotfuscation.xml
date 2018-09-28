@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE dotfuscator SYSTEM "http://www.preemptive.com/dotfuscator/dtd/dotfuscator_v2.1.dtd">
+<dotfuscator version="2.1">
+  <!--This is application generated code. Do not edit manually.-->
+  <global />
+  <input>
+    <asmlist>
+      <inputassembly>
+        <option>honoroas</option>
+        <option>stripoa</option>
+        <option>library</option>
+        <file dir="C:\svn\KellermanSoftware-Common\KellermanSoftware-Common\bin\Release" name="KellermanSoftware-Common.dll" />
+      </inputassembly>
+    </asmlist>
+  </input>
+  <output>
+    <file dir="${configdir}\Dotfuscated" />
+  </output>
+  <renaming scheme="unprintable">
+    <option>disable</option>
+    <mapping>
+      <mapoutput overwrite="false">
+        <file dir="${configdir}\Dotfuscated" name="Map.xml" />
+      </mapoutput>
+    </mapping>
+  </renaming>
+  <controlflow level="high" />
+  <signing>
+    <resign>
+      <option>dontuseattributes</option>
+      <key>
+        <file dir="C:\My_Documents\KellermanSoftware\DigitalCodeSigning\Strong Name Assembly Key" name="mykeyfile.snk" />
+      </key>
+    </resign>
+  </signing>
+</dotfuscator>
