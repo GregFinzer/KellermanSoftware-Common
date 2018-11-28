@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Win32;
 
 namespace KellermanSoftware.Common
 {
+    /// <summary>
+    /// Additional System Information
+    /// </summary>
     public static class SystemUtil
     {
         /// <summary>

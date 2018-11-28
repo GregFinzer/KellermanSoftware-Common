@@ -1,13 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Web;
 
 namespace KellermanSoftware.Common
 {
+    /// <summary>
+    /// Helper methods for dealing with processes
+    /// </summary>
     public static class ProcessUtil
     {
+        /// <summary>
+        /// Returns true if we are running in medium trust
+        /// </summary>
+        /// <returns></returns>
         public static bool IsMediumTrustOrLess()
         {
             AspNetHostingPermissionLevel permissionLevel = GetCurrentTrustLevel();
@@ -18,6 +24,10 @@ namespace KellermanSoftware.Common
                 || permissionLevel == AspNetHostingPermissionLevel.None;
         }
 
+        /// <summary>
+        /// Get the current trust level
+        /// </summary>
+        /// <returns></returns>
         public static AspNetHostingPermissionLevel GetCurrentTrustLevel()
         {
             foreach (AspNetHostingPermissionLevel trustLevel in
@@ -44,6 +54,12 @@ namespace KellermanSoftware.Common
             return AspNetHostingPermissionLevel.None;
         }
 
+        /// <summary>
+        /// Launch the associated email application
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="subject"></param>
+        /// <param name="body"></param>
         public static void LaunchEmail(string to, string subject, string body)
         {
             const int maxHTMLGetOperationCharacters = 2083;

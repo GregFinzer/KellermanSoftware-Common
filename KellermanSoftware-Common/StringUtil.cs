@@ -10,6 +10,11 @@ namespace KellermanSoftware.Common
 {
     public static class StringUtil
     {
+        /// <summary>
+        /// Convert milliseconds to elapsed time like 2 days, 4 hours, 10 minutes, 20 seconds, 120 milliseconds
+        /// </summary>
+        /// <param name="milliseconds"></param>
+        /// <returns></returns>
 		public static String MillisecondsToTimeLapse(long milliseconds)
         {
             var ts = TimeSpan.FromMilliseconds(milliseconds);
@@ -30,6 +35,11 @@ namespace KellermanSoftware.Common
             return string.Format("{0:n0} ms", ts.Milliseconds);
         }
 
+        /// <summary>
+        /// Convert bytes to string like 12GB
+        /// </summary>
+        /// <param name="byteCount"></param>
+        /// <returns></returns>
         public static String BytesToString(long byteCount)
         {
             string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; //Longs run out around EB
@@ -41,6 +51,11 @@ namespace KellermanSoftware.Common
             return (Math.Sign(byteCount) * num).ToString(CultureInfo.InvariantCulture) + " " + suf[place];
         }
 		
+        /// <summary>
+        /// Get an Int64 hash code for a string
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         public static Int64 GetInt64HashCode(string text)
         {
             if (text == null)
@@ -60,6 +75,11 @@ namespace KellermanSoftware.Common
             }
         }
 
+        /// <summary>
+        /// Reverse the text
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string Reverse(string value)
         {
             char[] charArray = value.ToCharArray();
@@ -67,6 +87,12 @@ namespace KellermanSoftware.Common
             return new string(charArray);
         }
 
+        /// <summary>
+        /// Returns true if the text matches any of the wildcards
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="wildcards"></param>
+        /// <returns></returns>
         public static bool MatchWildcards(string value, List<string> wildcards)
         {
             foreach (var wildcard in wildcards)
@@ -78,6 +104,12 @@ namespace KellermanSoftware.Common
             return false;
         }
 
+        /// <summary>
+        /// Returns true if the text matches the wildcard
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="wildcard"></param>
+        /// <returns></returns>
         public static bool MatchWildcard(string value, string wildcard)
         {
             value = value ?? string.Empty;
@@ -742,55 +774,10 @@ namespace KellermanSoftware.Common
 
         }
 
+        [Obsolete("Use Pluralization.MakeSingular", true)]
         public static string MakeSingular(string word)
         {
-            Dictionary<string, string> list = new Dictionary<string, string>();
-
-            //Equivalent
-            list.Add("equipment", "equipment");
-            list.Add("information", "information");
-            list.Add("rice", "rice");
-            list.Add("money", "money");
-            list.Add("species", "species");
-            list.Add("series", "series");
-            list.Add("fish", "fish");
-            list.Add("sheep", "sheep");
-
-            //Plural Forms
-            list.Add("s$", "");
-            list.Add("(n)ews$", "$1ews");
-            list.Add("([ti])a$", "$1um");
-            list.Add("((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$", "$1$2sis");
-            list.Add("(^analy)ses$", "$1sis");
-            list.Add("([^f])ves$", "$1fe");
-            list.Add("(hive)s$", "$1");
-            list.Add("(tive)s$", "$1");
-            list.Add("([lr])ves$", "$1f");
-            list.Add("([^aeiouy]|qu)ies$", "$1y");
-            list.Add("(s)eries$", "$1eries");
-            list.Add("(m)ovies$", "$1ovie");
-            list.Add("(x|ch|ss|sh)es$", "$1");
-            list.Add("([m|l])ice$", "$1ouse");
-            list.Add("(bus)es$", "$1");
-            list.Add("(o)es$", "$1");
-            list.Add("(shoe)s$", "$1");
-            list.Add("(cris|ax|test)es$", "$1is");
-            list.Add("([octop|vir])i$", "$1us");
-            list.Add("(alias|status)es$", "$1");
-            list.Add("^(ox)en$", "$1");
-            list.Add("(vert|ind)ices$", "$1ex");
-            list.Add("(matr)ices$", "$1ix");
-            list.Add("(quiz)zes$", "$1");
-
-            foreach (string key in list.Keys)
-            {
-                Regex re = new Regex(key, RegexOptions.IgnoreCase);
-
-                if (re.IsMatch(word))
-                    return re.Replace(word, list[key]);
-            }
-
-            return word;
+            return string.Empty;
         }
 
         /// <summary>
@@ -810,24 +797,25 @@ namespace KellermanSoftware.Common
                 {
                     return string.Empty;
                 }
-                else if (myObject == null)
+
+                if (myObject == null)
                 {
                     return string.Empty;
                 }
-                else if (myObject == System.DBNull.Value)
+
+                if (myObject == System.DBNull.Value)
                 {
                     return string.Empty;
                 }
-                else if (myObject.ToString().Length == 0)
+
+                if (myObject.ToString().Length == 0)
                 {
                     return string.Empty;
                 }
-                else
-                {
-                    results = myObject.ToString();
-                    length = Math.Min(results.Length, length);
-                    return myObject.ToString().Substring(0, length);
-                }
+
+                results = myObject.ToString();
+                length = Math.Min(results.Length, length);
+                return myObject.ToString().Substring(0, length);
             }
             catch
             {
@@ -1269,6 +1257,11 @@ namespace KellermanSoftware.Common
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Take a string that is delimited by NewLine and make into a list
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static List<String> StringToList(string value)
         {
             List<String> list = new List<string>();
@@ -1286,6 +1279,11 @@ namespace KellermanSoftware.Common
             return list;
         }
 
+        /// <summary>
+        /// Take a string list and combine into a string
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
         public static string ListToString(List<String> list)
         {
             if (list == null || list.Count == 0)
@@ -1325,20 +1323,20 @@ namespace KellermanSoftware.Common
         }
 
         /// <summary>
-        /// Parses sentence delimited by seperator and returns the word specified by the position
+        /// Parses sentence delimited by separator and returns the word specified by the position. Very old. This is one based instead of zero based.
         /// </summary>
         /// <param name="sentence">The string to parse</param>
         /// <param name="position">Which word to look for</param>
-        /// <param name="seperator">What the words are delmited by</param>
+        /// <param name="separator">What the words are delimited by</param>
         /// <returns>"" or the word found</returns>
-        public static string GetField(string sentence, int position, string seperator)
+        public static string GetField(string sentence, int position, string separator)
         {
             int startPos = 0;
             int seperatorPos;
             int fieldCount = 1;
             string field = "";
 
-            seperatorPos = sentence.IndexOf(seperator, startPos);
+            seperatorPos = sentence.IndexOf(separator, startPos);
 
             while (seperatorPos > -1)
             {
@@ -1349,8 +1347,8 @@ namespace KellermanSoftware.Common
                 }
 
                 fieldCount++;
-                startPos = seperatorPos + seperator.Length;
-                seperatorPos = sentence.IndexOf(seperator, startPos);
+                startPos = seperatorPos + separator.Length;
+                seperatorPos = sentence.IndexOf(separator, startPos);
             }
 
             //This will get the last field if it does not have a delimiter at the end
@@ -1365,19 +1363,19 @@ namespace KellermanSoftware.Common
         /// <summary>
         /// Calculate the number of words in a string
         /// </summary>
-        /// <param name="sSentence">String to parse</param>
-        /// <param name="sSeperator">Seperator character or string</param>
+        /// <param name="sentence">String to parse</param>
+        /// <param name="separator">Separator character or string</param>
         /// <returns>The number of words in the string</returns>
-        public static int NumberOfWords(string sSentence, string sSeperator)
+        public static int NumberOfWords(string sentence, string separator)
         {
-            int iSentenceLen = sSentence.Length;
+            int iSentenceLen = sentence.Length;
             int iStartPos = 0;
             int iWordCount = 0;
 
-            //Count the seperator characters
+            //Count the separator characters
             for (int i = 0; i < iSentenceLen - 1; i++)
             {
-                iStartPos = sSentence.IndexOf(sSeperator, iStartPos);
+                iStartPos = sentence.IndexOf(separator, iStartPos);
 
                 if (iStartPos > -1)
                 {
@@ -1388,10 +1386,10 @@ namespace KellermanSoftware.Common
                     break;
             }
 
-            //No Seperator on the end of the sentence
+            //No Separator on the end of the sentence
             if (iSentenceLen > 0)
             {
-                if (Right(sSentence, 1) != sSeperator && iSentenceLen > 0)
+                if (Right(sentence, 1) != separator && iSentenceLen > 0)
                     iWordCount++;
             }
 
@@ -1400,75 +1398,80 @@ namespace KellermanSoftware.Common
         }
 
         /// <summary>
-        /// Get the last words of a sentence
+        /// Get the last words of a sentence. Very old, this is one based, not zero based
         /// </summary>
-        /// <param name="sSentence">Sentence to parse</param>
-        /// <param name="sSeperator">Seperator Character</param>
-        /// <param name="iStartWord">First word to return</param>
+        /// <param name="sentence">Sentence to parse</param>
+        /// <param name="separator">Separator Character</param>
+        /// <param name="startWord">First word to return</param>
         /// <returns></returns>
-        public static string GetLastWords(string sSentence,
-            string sSeperator,
-            int iStartWord)
+        public static string GetLastWords(string sentence,
+            string separator,
+            int startWord)
         {
             int iMaxWords;
             string sLastWords = "";
 
-            iMaxWords = NumberOfWords(sSentence, sSeperator);
+            iMaxWords = NumberOfWords(sentence, separator);
 
-            for (int i = iStartWord; i <= iMaxWords; i++)
+            for (int i = startWord; i <= iMaxWords; i++)
             {
-                sLastWords += GetField(sSentence, i, sSeperator) + sSeperator;
+                sLastWords += GetField(sentence, i, separator) + separator;
             }
 
-            sLastWords = TakeOffEnd(sLastWords, sSeperator);
+            sLastWords = TakeOffEnd(sLastWords, separator);
 
             return sLastWords;
 
         }
 
         /// <summary>
-        /// Gets the last word in a sentence by the seperator
+        /// Gets the last word in a sentence by the separator
         /// </summary>
         /// <param name="sentence">The sentence.</param>
-        /// <param name="seperator">The seperator.</param>
+        /// <param name="separator">The separator.</param>
         /// <returns>System.String.</returns>
-        public static string GetLastWord(string sentence, string seperator)
+        public static string GetLastWord(string sentence, string separator)
         {
-            return GetLastWords(sentence, seperator, NumberOfWords(sentence, seperator));
+            return GetLastWords(sentence, separator, NumberOfWords(sentence, separator));
         }
 
         /// <summary>
         /// Take a string off the end of another string.  Example:  1,2,3,
         /// </summary>
-        /// <param name="sIn">The base string</param>
-        /// <param name="sTakeOff">What to take off</param>
+        /// <param name="value">The base string</param>
+        /// <param name="takeOff">What to take off</param>
         /// <returns>The resulting string</returns>
-        public static string TakeOffEnd(string sIn, string sTakeOff)
+        public static string TakeOffEnd(string value, string takeOff)
         {
-            string sReturn = sIn;
+            string sReturn = value;
 
-            if (sIn.Length > 0 && sIn.EndsWith(sTakeOff))
-                sReturn = sIn.Substring(0, sIn.Length - sTakeOff.Length);
+            if (value.Length > 0 && value.EndsWith(takeOff))
+                sReturn = value.Substring(0, value.Length - takeOff.Length);
 
             return sReturn;
         }
 
         /// <summary>
-        /// Take a string off the end of another string.  Example:  1,2,3,
+        /// Take a string off the beginning of another string.  Example:  ,1,2,3
         /// </summary>
-        /// <param name="sIn">The base string</param>
-        /// <param name="sTakeOff">What to take off</param>
+        /// <param name="value">The base string</param>
+        /// <param name="takeOff">What to take off</param>
         /// <returns>The resulting string</returns>
-        public static string TakeOffBeginning(string sIn, string sTakeOff)
+        public static string TakeOffBeginning(string value, string takeOff)
         {
-            string sReturn = sIn;
+            string sReturn = value;
 
-            if (sIn.Length > 0 && sIn.StartsWith(sTakeOff))
-                sReturn = sIn.Substring(1);
+            if (value.Length > 0 && value.StartsWith(takeOff))
+                sReturn = value.Substring(1);
 
             return sReturn;
         }
 
+        /// <summary>
+        /// Get the method name without the generic type
+        /// </summary>
+        /// <param name="methodName"></param>
+        /// <returns></returns>
         public static string RemoveGenericTypeFromMethod(string methodName)
         {
             return methodName.Replace(("<" + StringUtil.StringBetween(methodName, "<", ">") + ">"), string.Empty);

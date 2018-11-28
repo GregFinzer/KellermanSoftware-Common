@@ -8,6 +8,10 @@ using System.Runtime.InteropServices;
 
 namespace KellermanSoftware.Common
 {
+
+    /// <summary>
+    /// Get system information using unmanaged code
+    /// </summary>
     public static class SystemInfo
     {
         #region Class Variables

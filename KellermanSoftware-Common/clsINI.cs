@@ -1,9 +1,11 @@
-using System.Security;
 using System.Text;
 
 
 namespace KellermanSoftware.Common
 {
+    /// <summary>
+    /// Work with a specific INI file
+    /// </summary>
 	public class IniFile
 	{
         private bool _iniPathWritable = true;
@@ -92,24 +94,22 @@ namespace KellermanSoftware.Common
                 {
                     return;
                 }
+
+                if (_path.Length == 0)
+                {
+                    _iniPathWritable = false;
+                }
                 else
                 {
-                    if (_path.Length == 0)
-                    {
-                        _iniPathWritable = false;
-                    }
-                    else
-                    {
-                        string directory = FileUtil.ExtractPath(_path);
+                    string directory = FileUtil.ExtractPath(_path);
 
-                        //Create the directory if it does not exist
-                        if (System.IO.Directory.Exists(directory) == false)
-                        {
-                            System.IO.Directory.CreateDirectory(directory);
-                        }
-
-                        _iniPathWritable = FileUtil.Writable(directory);
+                    //Create the directory if it does not exist
+                    if (System.IO.Directory.Exists(directory) == false)
+                    {
+                        System.IO.Directory.CreateDirectory(directory);
                     }
+
+                    _iniPathWritable = FileUtil.Writable(directory);
                 }
             }
             catch //This is a failure when we could not create the directory

@@ -2,17 +2,27 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Reflection;
 
 namespace KellermanSoftware.Common
 {
+    /// <summary>
+    /// Helper methods for objects
+    /// </summary>
     public static class ObjectUtil
     {
         private static CompareObjects _cmpShallow = null;
         private static List<string> _elementsToIgnore;
 
+        /// <summary>
+        /// Serialize an object to a file using binary serialization
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="myObject"></param>
+        /// <param name="filePath"></param>
         public static void SerializeToFile<T>(T myObject, string filePath)
         {
             using (MemoryStream memoryStream = new MemoryStream())
@@ -29,6 +39,12 @@ namespace KellermanSoftware.Common
             }
         }
 
+        /// <summary>
+        /// Deserialize an object from a file using binary serialization
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public static T DeserializeFromFile<T>(string filePath)
         {
             using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
@@ -44,6 +60,12 @@ namespace KellermanSoftware.Common
             }
         }
         
+        /// <summary>
+        /// Clone an object using binary serialization
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="original"></param>
+        /// <returns></returns>
         public static T CloneWithSerialization<T>(T original) where T : class
         {
             T result;
@@ -58,6 +80,11 @@ namespace KellermanSoftware.Common
             return result;
         }
 
+        /// <summary>
+        /// Get the XSD Type for a .NET Type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static string GetXsdType(Type type)
         {
             bool nullable = false;
@@ -114,6 +141,11 @@ namespace KellermanSoftware.Common
             return result;
         }
 
+        /// <summary>
+        /// Get the CSharp Type for the passed in type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static string GetCSharpTypeString(Type type)
         {
             bool nullable = false;
@@ -169,42 +201,61 @@ namespace KellermanSoftware.Common
             return result;
         }
 
-        //Keep this and recompile using 3.5 with LINQ
-        //public static List<T> LoadFromAssemblyImplementsInterface<T>()
-        //{
-        //    List<T> list = new List<T>();
+        /// <summary>
+        /// Load all types that implement the passed interface
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static List<T> LoadFromAssemblyImplementsInterface<T>()
+        {
+            List<T> list = new List<T>();
 
-        //    list.AddRange(
-        //        typeof(T).Assembly
-        //        .GetTypes()
-        //        .Where(t => t.IsClass && !t.IsGenericType)
-        //        .Where(t => t.GetInterfaces().Any(i => i == typeof(T)))
-        //        .Select(t => (T)Activator.CreateInstance(t)));
+            list.AddRange(
+                typeof(T).Assembly
+                .GetTypes()
+                .Where(t => t.IsClass && !t.IsGenericType)
+                .Where(t => t.GetInterfaces().Any(i => i == typeof(T)))
+                .Select(t => (T)Activator.CreateInstance(t)));
 
-        //    return list;
-        //}
+            return list;
+        }
 
+        /// <summary>
+        /// Load all types that are subclasses of the passed class
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static List<T> LoadFromAssemblyWhereSubclass<T>()
+        {
+            List<T> list = new List<T>();
 
-        //public static List<T> LoadFromAssemblyWhereSubclass<T>() 
-        //{
-        //    List<T> list = new List<T>();
+            list.AddRange(
+                typeof(T).Assembly
+                .GetTypes()
+                .Where(t => t.IsClass && !t.IsGenericType)
+                .Where(t => t.IsSubclassOf(typeof(T)))
+                .Select(t => (T)Activator.CreateInstance(t)));
 
-        //    list.AddRange(
-        //        typeof (T).Assembly
-        //        .GetTypes()
-        //        .Where(t => t.IsClass && !t.IsGenericType)
-        //        .Where(t => t.IsSubclassOf(typeof(T)))
-        //        .Select(t => (T) Activator.CreateInstance(t)));
+            return list;
+        }
 
-        //    return list;
-        //}
-
+        /// <summary>
+        /// Returns true if the type is nullable
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static bool IsNullableType(Type type)
         {
             return (type.IsGenericType &&
                     type.GetGenericTypeDefinition().Equals(typeof(Nullable<>)));
         }
 
+        /// <summary>
+        /// Convert object to an enum value
+        /// </summary>
+        /// <typeparam name="TConvertTo"></typeparam>
+        /// <param name="from"></param>
+        /// <returns></returns>
         public static TConvertTo ConvertEnum<TConvertTo>(object from)
         {
             TConvertTo result = default(TConvertTo);
@@ -258,6 +309,11 @@ namespace KellermanSoftware.Common
             return result;
         }
 		
+        /// <summary>
+        /// Get a Description from an enum value or just the enum value
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string GetEnumDescription(Enum value)
         {
             string result= string.Empty;
@@ -274,6 +330,11 @@ namespace KellermanSoftware.Common
         }
 
 
+        /// <summary>
+        /// Convert an enum to a list of string
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static List<string> EnumToList<T>()
         {
             List<string> list = new List<string>();
@@ -292,6 +353,11 @@ namespace KellermanSoftware.Common
 
         }
 
+        /// <summary>
+        /// Convert an enum to a dictionary
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static Dictionary<string, int> EnumToDictionary<T>() where T : struct, IConvertible
         {
             Dictionary<string, int> result = new Dictionary<string, int>();
@@ -311,6 +377,12 @@ namespace KellermanSoftware.Common
             return result;
         }
 
+        /// <summary>
+        /// Convert a string or description to an enum
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumString"></param>
+        /// <returns></returns>
         public static T StringToEnum<T>(string enumString)
         {
             Type enumType = typeof(T);
@@ -346,6 +418,13 @@ namespace KellermanSoftware.Common
             return dest;
         }
 
+        /// <summary>
+        /// Copy a list
+        /// </summary>
+        /// <typeparam name="TS"></typeparam>
+        /// <typeparam name="TD"></typeparam>
+        /// <param name="sourceList"></param>
+        /// <returns></returns>
         public static List<TD> CopyList<TS,TD>(List<TS> sourceList)
             where TD : class, new()
             where TS : class
@@ -361,6 +440,13 @@ namespace KellermanSoftware.Common
             return destList;
         }
 
+        /// <summary>
+        /// Copy an array
+        /// </summary>
+        /// <typeparam name="TS"></typeparam>
+        /// <typeparam name="TD"></typeparam>
+        /// <param name="sourceArray"></param>
+        /// <returns></returns>
         public static TD[] CopyArray<TS,TD>(TS[] sourceArray) 
             where TD : class,new() 
             where TS : class
@@ -571,6 +657,11 @@ namespace KellermanSoftware.Common
             return sb.ToString().GetHashCode();
         }
 
+        /// <summary>
+        /// Returns true if the type can have children
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static bool IsChildType(Type t)
         {
             return IsClass(t)
@@ -580,21 +671,41 @@ namespace KellermanSoftware.Common
                 || IsStruct(t);
         }
 
+        /// <summary>
+        /// Returns true if the type is a timespan
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static bool IsTimespan(Type t)
         {
             return t == typeof(TimeSpan);
         }
 
+        /// <summary>
+        /// Returns true if the type is an enum
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static bool IsEnum(Type t)
         {
             return t.IsEnum;
         }
 
+        /// <summary>
+        /// Returns true if the type is a struct
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static bool IsStruct(Type t)
         {
             return t.IsValueType;
         }
 
+        /// <summary>
+        /// Returns true if a value is a simple type
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static bool IsSimpleType(Type t)
         {
             return t.IsPrimitive
@@ -605,21 +716,41 @@ namespace KellermanSoftware.Common
 
         }
 
+        /// <summary>
+        /// Returns true if the type is an array
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static bool IsArray(Type t)
         {
             return t.IsArray;
         }
 
+        /// <summary>
+        /// Returns true if a type is a class
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static bool IsClass(Type t)
         {
             return t.IsClass;
         }
 
+        /// <summary>
+        /// Returns true if a type is a dictionary
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static bool IsIDictionary(Type t)
         {
             return t.GetInterface("System.Collections.IDictionary", true) != null;
         }
 
+        /// <summary>
+        /// Returns true if a type is a list
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static bool IsIList(Type t)
         {
             return t.GetInterface("System.Collections.IList", true) != null;

@@ -4,6 +4,9 @@ using System.Text;
 
 namespace KellermanSoftware.Common
 {
+    /// <summary>
+    /// Custom mock for the email engine
+    /// </summary>
     public class EmailEngineMock : IEmailEngine
     {
         public bool EnableSsl { get; set; }

@@ -6,6 +6,9 @@ using KellermanSoftware.Common.Shell32;
 
 namespace KellermanSoftware.Common
 {
+    /// <summary>
+    /// Unsafe code for extracting icons
+    /// </summary>
     public class ExtractIconLogic
     {
         private const int SHGFI_SMALLICON = 0x1;

@@ -3,11 +3,38 @@ using System.Text;
 
 namespace KellermanSoftware.Common
 {
+    /// <summary>
+    /// RC4 Encryption Algorithm
+    /// </summary>
     public class RC4Encryption
     {
         private const int _n = 256;
-        //private int[] _sbox;
 
+        #region Public Methods
+        /// <summary>
+        /// Encrypt the passed string using a password
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public string Encrypt(string input, string password)
+        {
+            return StringToHexString(EncryptDecryptRC4(input, password));
+        }
+
+        /// <summary>
+        /// Decrypt the passed string using a password
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public string Decrypt(string input, string password)
+        {
+            return EncryptDecryptRC4(HexStringToString(input), password);
+        }
+        #endregion
+
+        #region Private Methods
         private int[] InitializeRC4(string password)
         {
             int[] sbox = new int[_n];
@@ -57,16 +84,6 @@ namespace KellermanSoftware.Common
             return cipher.ToString();
         }
 
-        public string Encrypt(string input, string password)
-        {
-            return StringToHexString(EncryptDecryptRC4(input, password));
-        }
-
-        public string Decrypt(string input, string password)
-        {
-            return EncryptDecryptRC4(HexStringToString(input),password);
-        }
-
         private static string StringToHexString(string input)
         {
             if (string.IsNullOrEmpty(input))
@@ -94,5 +111,6 @@ namespace KellermanSoftware.Common
             }
             return builder.ToString();
         }
+        #endregion
     }
 }

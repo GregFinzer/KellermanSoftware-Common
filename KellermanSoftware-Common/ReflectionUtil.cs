@@ -6,6 +6,9 @@ using System.Reflection;
 
 namespace KellermanSoftware.Common
 {
+    /// <summary>
+    /// Reflection helping methods
+    /// </summary>
     public static class ReflectionUtil
     {
         /// <summary>

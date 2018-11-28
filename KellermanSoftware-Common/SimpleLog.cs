@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
@@ -7,6 +6,9 @@ using System.Text;
 
 namespace KellermanSoftware.Common
 {
+    /// <summary>
+    /// Super simple logger that logs to a file, memory, console, or event log
+    /// </summary>
     public static class SimpleLog
     {
         public static bool _logConsole = false;
@@ -15,6 +17,10 @@ namespace KellermanSoftware.Common
         public static long _logMemoryOffset = 0;
         public static StringBuilder _logStringBuilder = null;
 
+        /// <summary>
+        /// Log a data table
+        /// </summary>
+        /// <param name="dt"></param>
         public static void Log(DataTable dt)
         {
             Log(GetDataTableLines(dt,1000,"    "));

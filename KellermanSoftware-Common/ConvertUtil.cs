@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 
 namespace KellermanSoftware.Common
 {
+    /// <summary>
+    /// Methods for converting values into specific types
+    /// </summary>
     public static class ConvertUtil
     {
         /// <summary>
@@ -64,19 +65,22 @@ namespace KellermanSoftware.Common
         /// <summary>
         /// Convert the string to a double, ignoring nulls using the current culture
         /// </summary>
-        /// <param name="oInput">The object or string to parse</param>
+        /// <param name="value">The object or string to parse</param>
         /// <returns>A double number</returns>
-        public static double cDbl(object oInput)
+        public static double cDbl(object value)
         {
+            if (value == null)
+                return 0;
+
             double result = 0;
-            string input;
+            string valueString;
 
             try
             {
-                input = oInput.ToString();
+                valueString = value.ToString();
 
-                input = StringUtil.RemoveCurrency(input);
-                Double.TryParse(input, out result);
+                valueString = StringUtil.RemoveCurrency(valueString);
+                Double.TryParse(valueString, out result);
             }
             catch
             {
@@ -88,13 +92,13 @@ namespace KellermanSoftware.Common
         /// <summary>
         /// Convert an unsigned short into a byte array
         /// </summary>
-        /// <param name="val"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public static byte[] ShortToByteArray(ushort val)
+        public static byte[] ShortToByteArray(ushort value)
         {
             byte[] bytes = new byte[2];
-            bytes[0] = (byte)(val >> 8); // bits 1- 8
-            bytes[1] = (byte)(val & 0x00FF); // bits 9-16
+            bytes[0] = (byte)(value >> 8); // bits 1- 8
+            bytes[1] = (byte)(value & 0x00FF); // bits 9-16
             return bytes;
         }
 
@@ -109,10 +113,10 @@ namespace KellermanSoftware.Common
             {
                 if (value == null)
                     return string.Empty;
-                else if (value == DBNull.Value)
+                if (value == DBNull.Value)
                     return string.Empty;
-                else
-                    return value.ToString();
+
+                return value.ToString();
             }
             catch
             {

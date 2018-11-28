@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 namespace KellermanSoftware.Common
 {
     /// <summary>
-    /// Arguments class
+    /// Parse arguments for a console application
     /// </summary>
     public class CommandLineArguments
     {

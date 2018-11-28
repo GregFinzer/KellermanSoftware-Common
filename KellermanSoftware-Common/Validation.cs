@@ -3,6 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace KellermanSoftware.Common
 {
+    /// <summary>
+    /// Validation helper functions
+    /// </summary>
     public static class Validation
     {
         /// <summary>
@@ -16,6 +19,11 @@ namespace KellermanSoftware.Common
             return versionPattern.IsMatch(versionString);
         }
 
+        /// <summary>
+        /// Returns true if the URL is valid
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
         public static bool IsValidURL(string url)
         {
             if (String.IsNullOrEmpty(url))

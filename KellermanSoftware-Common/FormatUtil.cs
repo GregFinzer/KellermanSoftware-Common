@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace KellermanSoftware.Common
 {
+    /// <summary>
+    /// Helper functions for formatting
+    /// </summary>
     public static class FormatUtil
     {
         /// <summary>

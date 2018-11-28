@@ -1,9 +1,7 @@
 
 #region Using Statements
 using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using System.Net.Mail;
 #endregion
 
@@ -32,12 +30,6 @@ emailClient.Credentials = SMTPUserInfo;
     /// </summary>
     public class EmailEngine : IEmailEngine
     {
-        //#region Class Variables
-        //private int smtpPort = 25;
-        //private string smtpServer = System.Environment.MachineName;
-        //private SmtpClient smtp = new SmtpClient();
-        //#endregion
-
         #region Properties
 
         public bool EnableSsl { get; set; }

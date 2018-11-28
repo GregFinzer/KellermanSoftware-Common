@@ -8,10 +8,17 @@ using Microsoft.Win32;
 
 namespace KellermanSoftware.Common
 {
+    /// <summary>
+    /// File helper methods
+    /// </summary>
     public static class FileUtil
     {
         private static readonly object _locker = new object();
 
+        /// <summary>
+        /// Update the last write time of a file
+        /// </summary>
+        /// <param name="filePath"></param>
 		public static void TouchFile(string filePath)
         {
             if (File.Exists(filePath))
@@ -158,7 +165,7 @@ namespace KellermanSoftware.Common
                                        + DateTime.Now.Minute
                                        + DateTime.Now.Second
                                        + DateTime.Now.Millisecond
-                                       + System.Diagnostics.Process.GetCurrentProcess().Id;
+                                       + Process.GetCurrentProcess().Id;
 
             string tempDirectory = Path.Combine(Path.GetTempPath(), tempDirectoryName);
             Directory.CreateDirectory(tempDirectory);
@@ -166,7 +173,7 @@ namespace KellermanSoftware.Common
         }
 		
         /// <summary>
-        /// Backup the specified file 
+        /// Backup the specified file with the specified number of backups
         /// </summary>
         /// <param name="sourceFile"></param>
         /// <param name="destFile"></param>
@@ -184,12 +191,12 @@ namespace KellermanSoftware.Common
                 return string.Empty;
 
             destPath = ExtractPath(destFile);
-            destBase = System.IO.Path.GetFileNameWithoutExtension(destFile);
-            destExt = System.IO.Path.GetExtension(destFile);
+            destBase = Path.GetFileNameWithoutExtension(destFile);
+            destExt = Path.GetExtension(destFile);
 
-            //Create the destination if it does not exist
-            if (System.IO.Directory.Exists(destPath) == false)
-                System.IO.Directory.CreateDirectory(destPath);
+            //Create the destination directory if it does not exist
+            if (Directory.Exists(destPath) == false)
+                Directory.CreateDirectory(destPath);
 
             destPath = PathSlash(destPath);
 
@@ -229,23 +236,23 @@ namespace KellermanSoftware.Common
         /// <summary>
         /// Extract Filename from a path
         /// </summary>
-        /// <param name="sFullPath">A fully qualified path ending in a filename</param>
+        /// <param name="fullPath">A fully qualified path ending in a filename</param>
         /// <returns>The extracted file name</returns>
-        public static string ExtractFileName(string sFullPath)
+        public static string ExtractFileName(string fullPath)
         {
-            return System.IO.Path.GetFileName(sFullPath);
+            return System.IO.Path.GetFileName(fullPath);
         }
 
         /// <summary>
         /// Returns true if a word is found in a file
         /// </summary>
-        /// <param name="file"></param>
+        /// <param name="filePath"></param>
         /// <param name="word"></param>
         /// <param name="caseInsensitive"></param>
         /// <returns></returns>
-        public static bool FindWordInFile(string file, string word, bool caseInsensitive)
+        public static bool FindWordInFile(string filePath, string word, bool caseInsensitive)
         {
-            string fileText = System.IO.File.ReadAllText(file);
+            string fileText = System.IO.File.ReadAllText(filePath);
 
             if (caseInsensitive)
             {
@@ -356,9 +363,14 @@ namespace KellermanSoftware.Common
             }
         }
 
-        public static long GetFileSize(string path)
+        /// <summary>
+        /// Get the size of a file
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static long GetFileSize(string filePath)
         {
-            return new System.IO.FileInfo(path).Length;
+            return new System.IO.FileInfo(filePath).Length;
         }
 
         /// <summary>
@@ -372,10 +384,11 @@ namespace KellermanSoftware.Common
 
             if (path.Length == 0)
                 return path;
-            else if (path.EndsWith(separator))
+
+            if (path.EndsWith(separator))
                 return path;
-            else
-                return path + separator;
+
+            return path + separator;
         }
 
         /// <summary>
@@ -385,7 +398,7 @@ namespace KellermanSoftware.Common
         /// <returns></returns>
         public static string GetParentDirectory(string fullPath)
         {
-            return System.IO.Path.GetDirectoryName(ExtractPath(fullPath));
+            return Path.GetDirectoryName(ExtractPath(fullPath));
         }
 
         /// <summary>
@@ -399,17 +412,20 @@ namespace KellermanSoftware.Common
                 throw new ArgumentNullException("fullPath");
 
             //Account for already in form of path
-            if (System.IO.Path.GetFileName(fullPath).Length == 0
-                || System.IO.Path.GetExtension(fullPath).Length == 0)
+            if (Path.GetFileName(fullPath).Length == 0
+                || Path.GetExtension(fullPath).Length == 0)
             {
                 return fullPath;
             }
-            else
-            {
-                return System.IO.Path.GetDirectoryName(fullPath);
-            }
+
+            return Path.GetDirectoryName(fullPath);
         }
 
+        /// <summary>
+        /// Replace a drive in a path with the current drive
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public static string ReplaceDriveLetterWithCurrent(string filePath)
         {
             Regex regex = new Regex(@"^[a-zA-Z]:\\");
@@ -423,6 +439,10 @@ namespace KellermanSoftware.Common
             return filePath;
         }
 
+        /// <summary>
+        /// Get the current drive letter
+        /// </summary>
+        /// <returns></returns>
         public static string GetCurrentDriveLetter()
         {
             string currentDirectory = GetCurrentDirectory();
@@ -436,13 +456,12 @@ namespace KellermanSoftware.Common
         }
 
         /// <summary>
-        /// Get the current directory of the executing assembly
+        /// Get the current directory 
         /// </summary>
         /// <returns></returns>
         public static string GetCurrentDirectory()
         {
             return PathSlash(AppDomain.CurrentDomain.BaseDirectory);
-            //return PathSlash(ExtractPath(System.Reflection.Assembly.GetExecutingAssembly().Location));
         }
 
         /// <summary>
@@ -463,6 +482,12 @@ namespace KellermanSoftware.Common
             return Path.Combine(rootDirectory, pathToAppend);
         }
 
+        /// <summary>
+        /// Copy a directory recursively 
+        /// </summary>
+        /// <param name="fromPath"></param>
+        /// <param name="toPath"></param>
+        /// <param name="clearDestFirst">If true, destination directory will be cleared first</param>
         public static void CopyDirectory(string fromPath, string toPath, bool clearDestFirst)
         {
             if (!Directory.Exists(fromPath))
@@ -478,21 +503,45 @@ namespace KellermanSoftware.Common
             CopyDirectory(fromPath, toPath);
         }
 
+        /// <summary>
+        /// Copy a directory
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="dest"></param>
         public static void CopyDirectory(string source, string dest)
         {
             CopyDirectory(source,dest,new List<string>());
         }
 
+        /// <summary>
+        /// Copy a directory with specific files matching a pattern
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="dest"></param>
+        /// <param name="searchPattern"></param>
         public static void CopyDirectory(string source, string dest, string searchPattern)
         {
             CopyDirectory(source, dest, searchPattern, new List<string>());
         }
 
+        /// <summary>
+        /// Copy a directory except for a list of files matching a pattern
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="dest"></param>
+        /// <param name="exclude"></param>
         public static void CopyDirectory(string source, string dest, List<string> exclude)
         {
             CopyDirectory(source,dest,"*.*", exclude);
         }
 
+        /// <summary>
+        /// Copy a directory with files matching a pattern and also exclude pattern
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="dest"></param>
+        /// <param name="searchPattern"></param>
+        /// <param name="exclude"></param>
         public static void CopyDirectory(string source, string dest, string searchPattern, List<string> exclude)
         {
             String[] files;
@@ -528,6 +577,10 @@ namespace KellermanSoftware.Common
             }
         }
 
+        /// <summary>
+        /// Safe deleting a directory
+        /// </summary>
+        /// <param name="path"></param>
         public static void DeleteDirectory(string path)
         {
             if (!Directory.Exists(path))
@@ -538,6 +591,10 @@ namespace KellermanSoftware.Common
             Directory.Delete(path,true);
         }
 
+        /// <summary>
+        /// Try up to 30 seconds to delete a directory
+        /// </summary>
+        /// <param name="path"></param>
         public static void DeleteDirectoryAndWait(string path)
         {
             for (int i = 1; i < 10; i++)
@@ -554,6 +611,10 @@ namespace KellermanSoftware.Common
             }
         }
 
+        /// <summary>
+        /// Create an empty file in the specified path
+        /// </summary>
+        /// <param name="path"></param>
         public static void CreateEmptyFile(string path)
         {
             using(new FileStream(path,FileMode.OpenOrCreate))
@@ -561,6 +622,11 @@ namespace KellermanSoftware.Common
             }
         }
 
+        /// <summary>
+        /// Open a file with the associated editor.  Also opens websites with default browser if url is passed
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public static string OpenWithAssociatedEditor(string filePath)
         {
             string defaultEditPath = "notepad.exe %1";
@@ -629,30 +695,29 @@ namespace KellermanSoftware.Common
             editPath = StringUtil.TakeOffBeginning(StringUtil.TakeOffEnd(editPath, "\""), "\"");
 
             ProcessUtil.Shell(editPath, "\"" + filePath + "\"", ProcessWindowStyle.Normal, false);
-            //ProcessUtil.Shell(editPath, "\"" + filePath + "\"", ProcessWindowStyle.Normal, false);
             return editPath;
         }
 
         /// <summary>
         /// Returns a valid filename, ignoring invalid characters. Turn spaces into underscores
         /// </summary>
-        /// <param name="sFileName"></param>
+        /// <param name="fileName"></param>
         /// <returns></returns>
-        public static string FilterFileName(string sFileName)
+        public static string FilterFileName(string fileName)
         {
-            return FilterFileName(sFileName, false);
+            return FilterFileName(fileName, false);
         }
 
         /// <summary>
         /// Returns a valid filename, ignoring invalid characters
         /// </summary>
-        /// <param name="sFileName"></param>
+        /// <param name="fileName"></param>
         /// <param name="allowSpaces">If false, spaces will be turned into underscores</param>
         /// <returns></returns>
-        public static string FilterFileName(string sFileName, bool allowSpaces)
+        public static string FilterFileName(string fileName, bool allowSpaces)
         {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder(sFileName.Length);
-            string sChar;
+            StringBuilder sb = new StringBuilder(fileName.Length);
+            string currentChar;
             string sInvalid = "";
 
             for (int i = 0; i < System.IO.Path.GetInvalidFileNameChars().GetUpperBound(0); i++)
@@ -666,19 +731,19 @@ namespace KellermanSoftware.Common
             sInvalid += System.IO.Path.DirectorySeparatorChar.ToString();
             sInvalid += System.IO.Path.AltDirectorySeparatorChar.ToString();
 
-            for (int i = 0; i < sFileName.Length; i++)
+            for (int i = 0; i < fileName.Length; i++)
             {
-                sChar = sFileName.Substring(i, 1);
+                currentChar = fileName.Substring(i, 1);
 
-                if (!allowSpaces && sChar == " ")
-                    sChar = "_";
+                if (!allowSpaces && currentChar == " ")
+                    currentChar = "_";
 
-                if (sChar == "," || sChar == "'")
+                if (currentChar == "," || currentChar == "'")
                 {
-                    sChar = "";
+                    currentChar = "";
                 }
-                else if (sInvalid.IndexOf(sChar) < 0)
-                    sb.Append(sChar);
+                else if (sInvalid.IndexOf(currentChar) < 0)
+                    sb.Append(currentChar);
             }
 
             return sb.ToString();

@@ -191,8 +191,6 @@ namespace KellermanSoftware.Common
 
         #endregion
 
-
-
         #region Public Methods
         /// <summary>
         /// Compare two objects of the same type to each other.
@@ -204,6 +202,7 @@ namespace KellermanSoftware.Common
         /// <param name="object1"></param>
         /// <param name="object2"></param>
         /// <returns>True if they are equal</returns>
+        [Obsolete("Use this NuGet package instead:  https://www.nuget.org/packages/CompareNETObjects/")]
         public bool Compare(object object1, object object2)
         {
             string defaultBreadCrumb = string.Empty;
