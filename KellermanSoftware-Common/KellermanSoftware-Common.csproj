@@ -11,7 +11,8 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>mykeyfile.snk</AssemblyOriginatorKeyFile>
-    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='ReleaseWithNuget'">true</GeneratePackageOnBuild>
+    <Configurations>Debug;Release;ReleaseWithNuget</Configurations>
   </PropertyGroup>
 
   <PropertyGroup>

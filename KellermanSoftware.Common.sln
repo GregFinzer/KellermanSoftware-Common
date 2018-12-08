@@ -1,20 +1,28 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KellermanSoftware-Common", "KellermanSoftware-Common\KellermanSoftware-Common.csproj", "{E4C5FB0D-445D-4704-9BE7-7D84685514BB}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2002
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KellermanSoftware-Common", "KellermanSoftware-Common\KellermanSoftware-Common.csproj", "{E4C5FB0D-445D-4704-9BE7-7D84685514BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		ReleaseWithNuget|Any CPU = ReleaseWithNuget|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E4C5FB0D-445D-4704-9BE7-7D84685514BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E4C5FB0D-445D-4704-9BE7-7D84685514BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4C5FB0D-445D-4704-9BE7-7D84685514BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4C5FB0D-445D-4704-9BE7-7D84685514BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4C5FB0D-445D-4704-9BE7-7D84685514BB}.ReleaseWithNuget|Any CPU.ActiveCfg = ReleaseWithNuget|Any CPU
+		{E4C5FB0D-445D-4704-9BE7-7D84685514BB}.ReleaseWithNuget|Any CPU.Build.0 = ReleaseWithNuget|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AF6B253A-3119-4DC7-B1EB-703944B3D83F}
 	EndGlobalSection
 EndGlobal
