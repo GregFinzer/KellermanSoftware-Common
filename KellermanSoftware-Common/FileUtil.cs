@@ -750,6 +750,29 @@ namespace KellermanSoftware.Common
         }
 
         /// <summary>
+        /// Get the app data directory, will return Portable\Data when running as a portable app
+        /// </summary>
+        /// <returns></returns>
+        public static string GetAppDataDirectory()
+        {
+            string currentDirectory = FileUtil.GetCurrentDirectory();
+            int index = currentDirectory.IndexOf("Portable\\App", StringComparison.Ordinal);
+
+            if (index > 0)
+            {
+                string result = currentDirectory.Substring(0, index) + "Portable\\Data";
+                Console.WriteLine(result);
+
+                if (!Directory.Exists(result))
+                    Directory.CreateDirectory(result);
+
+                return result;
+            }
+
+            return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        }
+
+        /// <summary>
         /// Serialize an object into XML and save to a file
         /// </summary>
         /// <typeparam name="T"></typeparam>

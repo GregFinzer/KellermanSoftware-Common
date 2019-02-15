@@ -72,8 +72,7 @@ namespace KellermanSoftware.Common
                     return false;
                 }
 
-                IniReaderWriter readerWriter = new IniReaderWriter();
-                readerWriter.WritePrivateProfileString(section, key, value, Path);
+                IniReaderWriter.WritePrivateProfileString(section, key, value, Path);
             }
             catch
             {
@@ -133,8 +132,7 @@ namespace KellermanSoftware.Common
             try
             {
                 StringBuilder temp = new StringBuilder(255);
-                IniReaderWriter readerWriter = new IniReaderWriter();
-                readerWriter.GetPrivateProfileString(section, key, string.Empty, temp, 255, Path);
+                IniReaderWriter.GetPrivateProfileString(section, key, string.Empty, temp, 255, Path);
                 return temp.ToString();
             }
             catch

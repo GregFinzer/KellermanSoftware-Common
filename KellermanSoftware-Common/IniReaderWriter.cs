@@ -12,8 +12,16 @@ namespace KellermanSoftware.Common
     /// </summary>
     public class IniReaderWriter
     {
+        #region Class Variables
         private readonly object _locker = new object();
 
+        /// <summary>
+        /// Name for the global section
+        /// </summary>
+        public const string GLOBAL_SECTION_NAME = "GLOBAL";
+        #endregion
+
+        #region Constructors
         public IniReaderWriter()
         {
             Setup();
@@ -25,14 +33,17 @@ namespace KellermanSoftware.Common
             CommentCharacter = ";";
             Delimiter = "=";
         }
+        #endregion
 
+        #region Properties
         /// <summary>
-        /// Override the file encoding.  The default is Encoding.Default
+        /// Override the file encoding.  The default is Encoding.Default.<br/>
+        /// See http://msdn.microsoft.com/en-us/library/system.text.encoding.aspx
         /// </summary>
         public Encoding FileEncoding { get; set; }
 
         /// <summary>
-        /// If true, escape characters will be processed.  The default is false.
+        /// If true, escape characters will be processed.  The default is false.<br/>
         /// See http://en.wikipedia.org/wiki/INI_file
         /// </summary>
         public bool IsProcessEscapeCharactersEnabled { get; set; }
@@ -43,30 +54,32 @@ namespace KellermanSoftware.Common
         public string CommentCharacter { get; set; }
 
         /// <summary>
-        /// The delimiter between settings and values.  By default it is a equals sign
+        /// The delimiter between settings and values.  By default it is an equals sign
         /// </summary>
         public string Delimiter { get; set; }
+        #endregion
 
         #region Managed Version of INI Functions
 
 
         /// <summary>
-        /// Managed version of GetPrivateProfileString<br />
-        /// No COM Interop is used<br />
-        /// If the file does not exist or the value is not in the file, the defaultValue is used.<br />
+        /// Managed version of GetPrivateProfileString<br/>
+        /// No COM Interop is used<br/>
+        /// If the file does not exist or the value is not in the file, the defaultValue is used.<br/>
         /// See:  http://msdn.microsoft.com/en-us/library/windows/desktop/ms724348%28v=vs.85%29.aspx
         /// </summary>
-        /// <param name="sectionName">The INI Section Name</param>
+        /// <param name="sectionName">The INI Section Name. Use GLOBAL for the global section.</param>
         /// <param name="settingName">The INI Setting Name</param>
         /// <param name="defaultValue">The default value if there is no value</param>
         /// <param name="returnedString">Output of the string</param>
         /// <param name="size">The number of buffer characters (not used but here for backward compatibility)</param>
         /// <param name="filePath">The path to the INI file</param>
-        /// <exception cref="ArgumentNullException">Occurs when sectionName, settingName or filePath is null</exception>
         /// <returns>Number of characters returned</returns>
-        public int GetPrivateProfileString(string sectionName, string settingName, string defaultValue, out string returnedString, int size, string filePath)
-        {            
-            returnedString= GetSetting(settingName, settingName, filePath) ?? defaultValue;
+        /// <exception caption="" cref="ArgumentNullException">Occurs when sectionName, settingName or filePath is null</exception>
+        public static int GetPrivateProfileString(string sectionName, string settingName, string defaultValue, out string returnedString, int size, string filePath)
+        {
+            IniReaderWriter iniReaderWriter = new IniReaderWriter();
+            returnedString = iniReaderWriter.GetSetting(sectionName, settingName, filePath) ?? defaultValue;
 
             if (returnedString == null)
                 return 0;
@@ -75,22 +88,24 @@ namespace KellermanSoftware.Common
         }
 
         /// <summary>
-        /// Managed version of GetPrivateProfileString<br />
-        /// No COM Interop is used<br />
-        /// If the file does not exist or the value is not in the file, the defaultValue is used.<br />
+        /// Managed version of GetPrivateProfileString<br/>
+        /// No COM Interop is used<br/>
+        /// If the file does not exist or the value is not in the file, the defaultValue is used.<br/>
         /// See:  http://msdn.microsoft.com/en-us/library/windows/desktop/ms724348%28v=vs.85%29.aspx
         /// </summary>
-        /// <param name="sectionName">The INI Section Name</param>
+        /// <param name="sectionName">The INI Section Name.  Use GLOBAL for the global section.</param>
         /// <param name="settingName">The INI Setting Name</param>
         /// <param name="defaultValue">The default value if there is no value</param>
         /// <param name="returnedBuffer">StrinbBuilder Output of the string</param>
         /// <param name="size">The number of buffer characters (not used but here for backward compatibility)</param>
         /// <param name="filePath">The path to the INI file</param>
-        /// <exception cref="ArgumentNullException">Occurs when sectionName, settingName or filePath is null</exception>
         /// <returns>Number of characters returned</returns>
-        public int GetPrivateProfileString(string sectionName, string settingName, string defaultValue, StringBuilder returnedBuffer, int size, string filePath)
+        /// <exception cref="ArgumentNullException">Occurs when sectionName, settingName or filePath is null</exception>
+        public static int GetPrivateProfileString(string sectionName, string settingName, string defaultValue, StringBuilder returnedBuffer, int size, string filePath)
         {
-            string result = GetSetting(settingName, settingName, filePath) ?? defaultValue;
+            IniReaderWriter iniReaderWriter = new IniReaderWriter();
+
+            string result = iniReaderWriter.GetSetting(sectionName, settingName, filePath) ?? defaultValue;
 
             if (result == null)
             {
@@ -102,38 +117,42 @@ namespace KellermanSoftware.Common
         }
 
         /// <summary>
-        /// Managed version of WritePrivateProfileString<br />
-        /// No COM Interop is used<br />
-        /// If the file does not exist it will be created.  If the section does not exist it will be created.  If the setting already exists it will be updated.  If the setting does not exist, it will be added.<br />
+        /// Managed version of WritePrivateProfileString<br/>
+        /// No COM Interop is used<br/>
+        /// If the file does not exist it will be created.  If the section does not exist it will be created.  If the setting already exists it will be updated.  If the setting does not exist, it will be added.<br/>
         /// See:  http://msdn.microsoft.com/en-us/library/windows/desktop/ms724348%28v=vs.85%29.aspx
         /// </summary>
-        /// <param name="sectionName">The INI Section Name</param>
+        /// <param name="sectionName">The INI Section Name. Use GLOBAL for the global section.</param>
         /// <param name="settingName">The INI Setting Name</param>
         /// <param name="settingValue">The INI Setting Value</param>
         /// <param name="filePath">The path to the INI file</param>
         /// <exception cref="ArgumentNullException">Occurs when sectionName, settingName or filePath is null</exception>
         /// <returns>True if the setting was set successfully</returns>
-        public bool WritePrivateProfileString(string sectionName, string settingName, string settingValue, string filePath)
+        /// <exception caption="" cref="ArgumentNullException">Occurs when sectionName, settingName or filePath is null</exception>
+        public static bool WritePrivateProfileString(string sectionName, string settingName, string settingValue, string filePath)
         {
-            return SaveSetting(sectionName, sectionName, settingValue, filePath);
+            IniReaderWriter iniReaderWriter = new IniReaderWriter();
+            return iniReaderWriter.SaveSetting(sectionName, settingName, settingValue, filePath);
         }
 
         /// <summary>
-        /// Managed version of GetPrivateProfileInt<br />
-        /// No COM Interop is used<br />
-        /// If the file does not exist or the value is not in the file, the defaultValue is used.<br />
+        /// Managed version of GetPrivateProfileInt<br/>
+        /// No COM Interop is used<br/>
+        /// If the file does not exist or the value is not in the file, the defaultValue is used.<br/>
         /// See:  http://msdn.microsoft.com/en-us/library/windows/desktop/ms724348%28v=vs.85%29.aspx
         /// </summary>
-        /// <param name="sectionName">The INI Section Name</param>
+        /// <param name="sectionName">The INI Section Name. Use GLOBAL for the global section.</param>
         /// <param name="settingName">The INI Setting Name</param>
         /// <param name="defaultValue">The default value if there is no value</param>
         /// <param name="filePath">The path to the INI file</param>
-        /// <exception cref="ArgumentNullException">Occurs when sectionName, settingName or filePath is null</exception>
         /// <returns>The integer</returns>
-        public int GetPrivateProfileInt(string sectionName, string settingName, int defaultValue, string filePath)
+        /// <exception caption="" cref="ArgumentNullException">Occurs when sectionName, settingName or filePath is null</exception>
+        public static int GetPrivateProfileInt(string sectionName, string settingName, int defaultValue, string filePath)
         {
             int result = defaultValue;
-            string value = GetSetting(settingName, settingName, filePath);
+            IniReaderWriter iniReaderWriter = new IniReaderWriter();
+
+            string value = iniReaderWriter.GetSetting(sectionName, settingName, filePath);
 
             if (String.IsNullOrEmpty(value))
                 return result;
@@ -147,13 +166,13 @@ namespace KellermanSoftware.Common
         #region Public Methods
 
         /// <summary>
-        /// Get a list of the sections in an INI file<br />
-        /// No COM Interop is used<br />
+        /// Get a list of the sections in an INI file. The global section will be returned as GLOBAL.  See also GLOBAL_SECTION_NAME<br/>
+        /// No COM Interop is used<br/>
         /// If the file does not exist, no sections will be returned.
         /// </summary>
         /// <param name="filePath">The path to the INI file</param>
-        /// <exception cref="ArgumentNullException">Occurs when filePath is null</exception>
         /// <returns>A list of the section names</returns>
+        /// <exception caption="" cref="ArgumentNullException">Occurs when filePath is null</exception>
         public List<string> GetSectionNames(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
@@ -164,25 +183,38 @@ namespace KellermanSoftware.Common
 
             List<string> result = new List<string>();
             List<string> lines = ReadLines(filePath);
+            bool namedSectionFound = false;
+            bool globalSectionAdded = false;
 
             foreach (var line in lines)
             {
+                if (String.IsNullOrEmpty(line) || line.StartsWith(CommentCharacter))
+                    continue;
+
                 if (line.StartsWith("[") && line.EndsWith("]"))
-                    result.Add(line.Substring(1,line.Length-2));
+                {
+                    result.Add(line.Substring(1, line.Length - 2));
+                    namedSectionFound = true;
+                }
+                else if (!namedSectionFound && !globalSectionAdded)
+                {
+                    result.Add(GLOBAL_SECTION_NAME);
+                    globalSectionAdded = true;
+                }
             }
 
             return result;
         }
 
         /// <summary>
-        /// Get a dictionary of the key value pairs for a section in an INI file<br />
-        /// No COM Interop is used<br />
+        /// Get a dictionary of the key value pairs for a section in an INI file<br/>
+        /// No COM Interop is used<br/>
         /// If the file does not exist, no items will be returned.
         /// </summary>
-        /// <param name="sectionName">The section name</param>
+        /// <param name="sectionName">The section name.  Use GLOBAL for the global section.</param>
         /// <param name="filePath">The path to the INI file</param>
-        /// <exception cref="ArgumentNullException">Occurs when sectionName, or filePath is null</exception>
         /// <returns>A list of the settings and their values</returns>
+        /// <exception caption="" cref="ArgumentNullException">Occurs when sectionName, or filePath is null</exception>
         public Dictionary<string, string> GetSectionValues(string sectionName, string filePath)
         {
             if (string.IsNullOrEmpty(sectionName))
@@ -197,6 +229,7 @@ namespace KellermanSoftware.Common
             Dictionary<string, string> result = new Dictionary<string, string>();
             List<string> lines = ReadLines(filePath);
 
+            bool inGlobalSection = sectionName == GLOBAL_SECTION_NAME;
             bool inDesiredSection = false;
             string lowerSectionName = "[" + sectionName.ToLower() + "]";
 
@@ -214,9 +247,10 @@ namespace KellermanSoftware.Common
                 if (line.StartsWith("[") && line.EndsWith("]"))
                 {
                     inDesiredSection = lowerLine == lowerSectionName;
+                    inGlobalSection = false;
                 }
                 //We found the setting in the section
-                else if (inDesiredSection)
+                else if (inDesiredSection || inGlobalSection)
                 {
                     int delimiterPosition = line.IndexOf(Delimiter);
 
@@ -235,30 +269,30 @@ namespace KellermanSoftware.Common
         }
 
         /// <summary>
-        /// Return true if a setting exists<br />
-        /// No COM Interop is used<br />
+        /// Return true if a setting exists<br/>
+        /// No COM Interop is used<br/>
         /// If the file does not exist or the setting does not exist, the value returned will be false.
         /// </summary>
-        /// <param name="sectionName">The section name</param>
+        /// <param name="sectionName">The section name.  Use GLOBAL for the global section.</param>
         /// <param name="settingName">The setting name</param>
         /// <param name="filePath">The path to the INI File</param>
-        /// <exception cref="ArgumentNullException">Occurs when sectionName, settingName or filePath is null</exception>
         /// <returns></returns>
+        /// <exception caption="" cref="ArgumentNullException">Occurs when sectionName, settingName or filePath is null</exception>
         public bool SettingExists(string sectionName, string settingName, string filePath)
         {
             return GetSetting(sectionName, settingName, filePath) != null;
         }
 
         /// <summary>
-        /// Get the value for a setting in a section<br />
-        /// No COM Interop is used<br />
+        /// Get the value for a setting in a section<br/>
+        /// No COM Interop is used<br/>
         /// If the file does not exist or the setting does not exist, the value returned will be null.
         /// </summary>
-        /// <param name="sectionName">The section name</param>
+        /// <param name="sectionName">The section name.  Use GLOBAL for the global section.</param>
         /// <param name="settingName">The setting name</param>
         /// <param name="filePath">The path to the INI File</param>
-        /// <exception cref="ArgumentNullException">Occurs when sectionName, settingName or filePath is null</exception>
         /// <returns></returns>
+        /// <exception caption="" cref="ArgumentNullException">Occurs when sectionName, settingName or filePath is null</exception>
         public string GetSetting(string sectionName, string settingName, string filePath)
         {
             if (string.IsNullOrEmpty(sectionName))
@@ -280,16 +314,15 @@ namespace KellermanSoftware.Common
         }
 
         /// <summary>
-        /// Save a value to an INI file<br />
-        /// No COM Interop is used<br />
-        /// If the file does not exist it will be created.  If the section does not exist it will be created.  If the setting already exists it will be updated.  If the setting does not exist, it will be added.<br />
-        /// </summary>
-        /// <param name="sectionName">The section name</param>
+        /// Save a value to an INI file<br/>
+        /// No COM Interop is used<br/>
+        /// If the file does not exist it will be created.  If the section does not exist it will be created.  If the setting already exists it will be updated.  If the setting does not exist, it will be added.<br/></summary>
+        /// <param name="sectionName">The section name. Use GLOBAL for the global section.</param>
         /// <param name="settingName">The setting name</param>
         /// <param name="settingValue">The value to set</param>
         /// <param name="filePath">The path to the INI file</param>
-        /// <exception cref="ArgumentNullException">Occurs when sectionName, settingName or filePath is null</exception>
         /// <returns>True if it was saved successfully</returns>
+        /// <exception caption="" cref="ArgumentNullException">Occurs when sectionName, settingName or filePath is null</exception>
         public bool SaveSetting(string sectionName, string settingName, string settingValue, string filePath)
         {
             if (string.IsNullOrEmpty(sectionName))
@@ -309,15 +342,15 @@ namespace KellermanSoftware.Common
         }
 
         /// <summary>
-        /// Delete a setting from an INI file<br />
-        /// No COM Interop is used<br />
+        /// Delete a setting from an INI file<br/>
+        /// No COM Interop is used<br/>
         /// If the file does not exist or the value does not exist, false will be returned.
         /// </summary>
-        /// <param name="sectionName">The name of the section</param>
+        /// <param name="sectionName">The name of the section.  Use GLOBAL for the global section.</param>
         /// <param name="settingName">The name of the setting</param>
         /// <param name="filePath">The path to the INI file</param>
-        /// <exception cref="ArgumentNullException">Occurs when sectionName, settingName or filePath is null</exception>
         /// <returns>True if the setting was deleted</returns>
+        /// <exception caption="" cref="ArgumentNullException">Occurs when sectionName, settingName or filePath is null</exception>
         public bool DeleteSetting(string sectionName, string settingName, string filePath)
         {
             if (string.IsNullOrEmpty(sectionName))
@@ -416,6 +449,98 @@ namespace KellermanSoftware.Common
 
         private void AddSetting(List<string> lines, string sectionName, string settingName, string settingValue)
         {
+            if (sectionName == GLOBAL_SECTION_NAME)
+                AddGlobalSectionSetting(lines, settingName, settingValue);
+            else
+                AddNamedSectionSetting(lines, sectionName, settingName, settingValue);
+        }
+
+
+
+        private void AddGlobalSectionSetting(List<string> lines, string settingName, string settingValue)
+        {
+            string newSetting = string.Format("{0}{1}{2}", settingName, Delimiter, settingValue);
+
+            //Empty File
+            if (lines.Count == 0)
+            {
+                lines.Add(newSetting);
+                return;
+            }
+
+            //No global section, add it at the top
+            if (!IsThereAGlobalSection(lines))
+            {
+                lines.Insert(0,string.Empty);
+                lines.Insert(0, newSetting);
+                return;
+            }
+
+            string lowerSettingName = settingName.ToLower();
+            int lastSetting = 0;
+
+            //We have a global section, look for the value
+            for (int i = 0; i < lines.Count; i++)
+            {
+                string line = lines[i];
+                string lowerLine = line.ToLower();
+
+                //This is an update
+                //There is an equals after the setting name
+                //The setting name matches after it is trimmed
+                if (lowerLine.StartsWith(lowerSettingName)
+                    && lowerLine.IndexOf(Delimiter, lowerSettingName.Length) > 0
+                    && lowerLine.Substring(0, lowerLine.IndexOf(Delimiter)).Trim() == lowerSettingName)
+                {
+                    lines[i] = newSetting;
+                    return;
+                }
+
+                //Skip blank lines and comments
+                if (String.IsNullOrEmpty(line) || line.StartsWith(CommentCharacter))
+                {
+                    continue;
+                }
+
+                //We have hit a section name
+                if (line.StartsWith("[") && line.EndsWith("]"))
+                {
+                    //Add a blank line if there is not one after the global section
+                    if (!string.IsNullOrEmpty(lines[lastSetting+1]))
+                        lines.Insert(lastSetting + 1, string.Empty);
+
+                    lines.Insert(lastSetting + 1, newSetting);
+                    break;
+                }
+
+                //If we are here, we are on a valid setting
+                lastSetting = i;
+            }
+        }
+
+        private bool IsThereAGlobalSection(List<string> lines)
+        {
+            foreach (var line in lines)
+            {
+                //Skip blank lines and comments
+                if (String.IsNullOrEmpty(line) || line.StartsWith(CommentCharacter))
+                {
+                    continue;
+                }
+
+                if (lines[0].StartsWith("[") && lines[0].EndsWith("]"))
+                {
+                    return false;
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private void AddNamedSectionSetting(List<string> lines, string sectionName, string settingName, string settingValue)
+        {
             bool inDesiredSection = false;
 
             string lowerSectionName = "[" + sectionName.ToLower() + "]";
@@ -430,10 +555,10 @@ namespace KellermanSoftware.Common
                 //This is an update
                 //There is an equals after the setting name
                 //The setting name matches after it is trimmed
-                if (inDesiredSection 
+                if (inDesiredSection
                     && lowerLine.StartsWith(lowerSettingName)
-                    && lowerLine.IndexOf(Delimiter,lowerSettingName.Length) > 0
-                    && lowerLine.Substring(0,lowerLine.IndexOf(Delimiter)).Trim() == lowerSettingName)                
+                    && lowerLine.IndexOf(Delimiter, lowerSettingName.Length) > 0
+                    && lowerLine.Substring(0, lowerLine.IndexOf(Delimiter)).Trim() == lowerSettingName)
                 {
                     lines[i] = newSetting;
                     return;
@@ -443,15 +568,15 @@ namespace KellermanSoftware.Common
                 if (inDesiredSection
                     && (String.IsNullOrEmpty(line)
                         || (line.StartsWith("[") && line.EndsWith("]"))))
-                {                    
-                    lines.Insert(i,newSetting);
+                {
+                    lines.Insert(i, newSetting);
                     return;
                 }
 
                 //Skip blank lines and comments
                 if (String.IsNullOrEmpty(line) || line.StartsWith(CommentCharacter))
                     continue;
-                
+
                 if (line.StartsWith("[") && line.EndsWith("]"))
                 {
                     inDesiredSection = lowerLine == lowerSectionName;
@@ -470,7 +595,7 @@ namespace KellermanSoftware.Common
                     lines.Add(string.Empty);
 
                 //Add the section
-                lines.Add(string.Format("[{0}]",sectionName));
+                lines.Add(string.Format("[{0}]", sectionName));
 
                 //Add the new setting
                 lines.Add(newSetting);
@@ -519,6 +644,7 @@ namespace KellermanSoftware.Common
             bool inDesiredSection = false;
             string lowerSectionName = "[" + sectionName.ToLower() + "]";
             string lowerSettingName = settingName.ToLower();
+            bool inGlobalSection = sectionName == GLOBAL_SECTION_NAME;
 
             for (int i=0;i<lines.Count;i++)
             {
@@ -534,11 +660,13 @@ namespace KellermanSoftware.Common
                 if (line.StartsWith("[") && line.EndsWith("]"))
                 {
                     inDesiredSection = lowerLine == lowerSectionName;
+                    inGlobalSection = false;
                 }
+
                 //We found the setting in the section
                 //There is an equals after the setting name
                 //The setting name matches after it is trimmed
-                else if (inDesiredSection
+                else if ((inDesiredSection || inGlobalSection)
                     && lowerLine.StartsWith(lowerSettingName)
                     && lowerLine.IndexOf(Delimiter,lowerSettingName.Length) > 0
                     && lowerLine.Substring(0,lowerLine.IndexOf(Delimiter)).Trim() == lowerSettingName)
