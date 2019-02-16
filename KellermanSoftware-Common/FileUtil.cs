@@ -769,7 +769,7 @@ namespace KellermanSoftware.Common
                 return result;
             }
 
-            return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            return Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         }
 
         /// <summary>

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace KellermanSoftware.Common
 {
@@ -22,6 +24,8 @@ namespace KellermanSoftware.Common
                 throw new ArgumentNullException("config.ProjectName");
 
             _config = config;
+
+            Setup();
         }
 
         public string GetSetting(string section, string name)
@@ -33,6 +37,22 @@ namespace KellermanSoftware.Common
                 return setting;
 
             return _crypt.Decrypt(setting, _config.EncryptionPassword);
+        }
+
+        public Dictionary<string, string> GetSettingsForSection(string section)
+        {
+            string filePath = GetSettingFilename(section);
+            Dictionary<string, string> settings= _ini.GetSectionValues(section, filePath);
+
+            if (String.IsNullOrEmpty(_config.EncryptionPassword))
+                return settings;
+
+            foreach (var setting in settings.ToList())
+            {
+                settings[setting.Key] = _crypt.Decrypt(setting.Value, _config.EncryptionPassword);
+            }
+
+            return settings;
         }
 
         public void SaveSetting(string section, string name, string value)
