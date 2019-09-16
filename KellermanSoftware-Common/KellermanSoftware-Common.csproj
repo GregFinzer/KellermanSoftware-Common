@@ -5,7 +5,7 @@
     <AssemblyTitle>Kellerman-Common</AssemblyTitle>
     <AssemblyCompany>Kellerman Software</AssemblyCompany>
     <AssemblyProduct>Kellerman-Common</AssemblyProduct>
-    <TargetFrameworks>net35;net40;net45;net451;net452;net46;</TargetFrameworks>
+    <TargetFrameworks>net35;net40;net45;net451;net452;net46;net47;net471;net472;net48</TargetFrameworks>
     <AssemblyName>KellermanSoftware.Common</AssemblyName>
     <RootNamespace>KellermanSoftware.Common</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -21,16 +21,17 @@
     <PackageTags>common utility</PackageTags>
     <Description>Common Utility Methods for both Web and Desktop Applications</Description>
     <Authors>KellermanSoftware</Authors>
-    <Version>1.11</Version>
-    <AssemblyVersion>1.11.0.0</AssemblyVersion>
+    <Version>1.12</Version>
+    <AssemblyVersion>1.12.0.0</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Company>Kellerman Software</Company>
-    <Copyright>Copyright 2018 Kellerman Software</Copyright>
+    <Copyright>Copyright 2019 Kellerman Software</Copyright>
     <PackageLicenseUrl>https://github.com/GregFinzer/KellermanSoftware-Common/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/GregFinzer/KellermanSoftware-Common</PackageProjectUrl>
     <PackageIconUrl>http://www.kellermanstores.com/Content/images/NuGetIcon.png</PackageIconUrl>
-    <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
-    <FileVersion>1.11.0.0</FileVersion>
+    <PackageReleaseNotes>Builds for .NET Framework 4.7, 4.7.1, 4.7.2, and 4.8</PackageReleaseNotes>
+    <FileVersion>1.12.0.0</FileVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
@@ -62,6 +63,22 @@
     <DefineConstants>$(DefineConstants);NET46;NETFULL</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net47'">
+    <DefineConstants>$(DefineConstants);NET47;NETFULL</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net471'">
+    <DefineConstants>$(DefineConstants);NET471;NETFULL</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net472'">
+    <DefineConstants>$(DefineConstants);NET472;NETFULL</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net48'">
+    <DefineConstants>$(DefineConstants);NET48;NETFULL</DefineConstants>
+  </PropertyGroup>
+  
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
   </ItemGroup>
