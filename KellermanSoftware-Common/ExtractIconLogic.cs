@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security;
 using KellermanSoftware.Common.Shell32;
 
 namespace KellermanSoftware.Common
@@ -54,6 +55,7 @@ namespace KellermanSoftware.Common
         public static extern int DestroyIcon(
             IntPtr hIcon);
 
+        [SecuritySafeCritical]
         public static Icon GetFileIcon(string filepath)
         {
             IntPtr hIcon = GetIconHandleFromFilePath(filepath, IconSizeEnum.SmallIcon16);
@@ -64,6 +66,7 @@ namespace KellermanSoftware.Common
             return myIcon;
         }
 
+        [SecuritySafeCritical]
         public static System.Drawing.Bitmap GetBitmapFromFolderPath(
             string filepath, IconSizeEnum iconsize)
         {
@@ -71,6 +74,7 @@ namespace KellermanSoftware.Common
             return getBitmapFromIconHandle(hIcon);
         }
 
+        [SecuritySafeCritical]
         public static System.Drawing.Bitmap GetBitmapFromFilePath(
             string filepath, IconSizeEnum iconsize)
         {
@@ -78,6 +82,7 @@ namespace KellermanSoftware.Common
             return getBitmapFromIconHandle(hIcon);
         }
 
+        [SecuritySafeCritical]
         public static System.Drawing.Bitmap GetBitmapFromPath(
             string filepath, IconSizeEnum iconsize)
         {
@@ -96,6 +101,7 @@ namespace KellermanSoftware.Common
             return getBitmapFromIconHandle(hIcon);
         }
 
+        [SecuritySafeCritical]
         private static System.Drawing.Bitmap getBitmapFromIconHandle(IntPtr hIcon)
         {
             if (hIcon == IntPtr.Zero) throw new System.IO.FileNotFoundException();
@@ -107,6 +113,7 @@ namespace KellermanSoftware.Common
             return bitmap;
         }
 
+        [SecuritySafeCritical]
         private static IntPtr GetIconHandleFromFilePath(string filepath, IconSizeEnum iconsize)
         {
             var shinfo = new Shell32.SHFILEINFO();
@@ -116,6 +123,7 @@ namespace KellermanSoftware.Common
             return getIconHandleFromFilePathWithFlags(filepath, iconsize, ref shinfo, FILE_ATTRIBUTE_NORMAL, flags);
         }
 
+        [SecuritySafeCritical]
         private static IntPtr GetIconHandleFromFolderPath(string folderpath, IconSizeEnum iconsize)
         {
             var shinfo = new Shell32.SHFILEINFO();
@@ -127,6 +135,7 @@ namespace KellermanSoftware.Common
             return getIconHandleFromFilePathWithFlags(folderpath, iconsize, ref shinfo, FILE_ATTRIBUTE_DIRECTORY, flags);
         }
 
+        [SecuritySafeCritical]
         private static IntPtr getIconHandleFromFilePathWithFlags(
             string filepath, IconSizeEnum iconsize,
             ref Shell32.SHFILEINFO shinfo, int fileAttributeFlag, uint flags)
