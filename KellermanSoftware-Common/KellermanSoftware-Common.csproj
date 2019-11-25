@@ -21,16 +21,16 @@
     <PackageTags>common utility</PackageTags>
     <Description>Common Utility Methods for both Web and Desktop Applications</Description>
     <Authors>KellermanSoftware</Authors>
-    <Version>1.13</Version>
-    <AssemblyVersion>1.13.0.0</AssemblyVersion>
+    <Version>1.14</Version>
+    <AssemblyVersion>1.14.0.0</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Company>Kellerman Software</Company>
     <Copyright>Copyright 2019 Kellerman Software</Copyright>
     <PackageLicenseUrl>https://github.com/GregFinzer/KellermanSoftware-Common/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/GregFinzer/KellermanSoftware-Common</PackageProjectUrl>
     <PackageIconUrl>http://www.kellermanstores.com/Content/images/NuGetIcon.png</PackageIconUrl>
-    <PackageReleaseNotes>Mark Extract Icon Logic as Security Safe Critical</PackageReleaseNotes>
-    <FileVersion>1.13.0.0</FileVersion>
+    <PackageReleaseNotes>Fixes for SystemInfo</PackageReleaseNotes>
+    <FileVersion>1.14.0.0</FileVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
