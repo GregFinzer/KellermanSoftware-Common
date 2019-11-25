@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KellermanSoftware-Common", "KellermanSoftware-Common\KellermanSoftware-Common.csproj", "{E4C5FB0D-445D-4704-9BE7-7D84685514BB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KellermanSoftware.Common.Tests", "KellermanSoftware.Common.Tests\KellermanSoftware.Common.Tests.csproj", "{AF98FB8F-2C51-48F7-8A4A-2F626F94E4CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,6 +20,12 @@ Global
 		{E4C5FB0D-445D-4704-9BE7-7D84685514BB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E4C5FB0D-445D-4704-9BE7-7D84685514BB}.ReleaseWithNuget|Any CPU.ActiveCfg = ReleaseWithNuget|Any CPU
 		{E4C5FB0D-445D-4704-9BE7-7D84685514BB}.ReleaseWithNuget|Any CPU.Build.0 = ReleaseWithNuget|Any CPU
+		{AF98FB8F-2C51-48F7-8A4A-2F626F94E4CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF98FB8F-2C51-48F7-8A4A-2F626F94E4CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF98FB8F-2C51-48F7-8A4A-2F626F94E4CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF98FB8F-2C51-48F7-8A4A-2F626F94E4CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF98FB8F-2C51-48F7-8A4A-2F626F94E4CD}.ReleaseWithNuget|Any CPU.ActiveCfg = Release|Any CPU
+		{AF98FB8F-2C51-48F7-8A4A-2F626F94E4CD}.ReleaseWithNuget|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
