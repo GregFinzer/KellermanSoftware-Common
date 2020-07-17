@@ -1109,13 +1109,36 @@ namespace KellermanSoftware.Common
         }
 
         /// <summary>
+        /// Returns true if the string is all upper case
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static bool IsAllUpper(string input)
+        {
+            foreach (var c in input)
+            {
+                if (!Char.IsUpper(c))
+                    return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Return a camelCase string
         /// </summary>
         /// <param name="sentence"></param>
         /// <returns></returns>
         public static string CamelCase(string sentence)
         {
-            string currentChar = string.Empty;
+            if (sentence.Length == 1)
+                return sentence.ToLower();
+
+            if (!IsAllUpper(sentence) && !sentence.Contains(" "))
+            {
+                return sentence.Substring(0, 1).ToLower() + sentence.Substring(1);
+            }
+
             bool lastSpace = false;
             System.Text.StringBuilder sb = new StringBuilder(sentence.Length);
 
@@ -1126,7 +1149,7 @@ namespace KellermanSoftware.Common
 
             for (int i = 0; i < sentence.Length; i++)
             {
-                currentChar = sentence.Substring(i, 1);
+                string currentChar = sentence.Substring(i, 1);
                 if (lastSpace)
                 {
                     currentChar = currentChar.ToUpper();
