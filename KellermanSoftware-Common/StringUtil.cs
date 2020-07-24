@@ -1123,6 +1123,22 @@ namespace KellermanSoftware.Common
 
             return true;
         }
+        
+        /// <summary>
+        /// Returns true if the string is all lower case
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static bool IsAllLower(string input)
+        {
+            foreach (var c in input)
+            {
+                if (!Char.IsLower(c))
+                    return false;
+            }
+
+            return true;
+        }
 
         /// <summary>
         /// Return a camelCase string
@@ -1178,6 +1194,14 @@ namespace KellermanSoftware.Common
         /// <returns></returns>
         public static string PascalCase(string sentence)
         {
+            if (sentence.Length == 1)
+                return sentence.ToLower();
+
+            if (!IsAllUpper(sentence) && !sentence.Contains(" "))
+            {
+                return sentence.Substring(0, 1).ToUpper() + sentence.Substring(1);
+            }
+
             string currentChar = string.Empty;
             bool lastSpace = true;
             System.Text.StringBuilder sb = new StringBuilder(sentence.Length);
