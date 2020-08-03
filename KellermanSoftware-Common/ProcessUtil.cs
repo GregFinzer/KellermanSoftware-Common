@@ -78,6 +78,43 @@ namespace KellermanSoftware.Common
         }
 
         /// <summary>
+        /// Runs the passed executable
+        /// </summary>
+        /// <param name="processExecutableFilePath">Path to the process executable.</param>
+        /// <param name="arguments">(Optional) The arguments.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">arguments</exception>
+        /// <exception cref="InvalidOperationException"></exception>
+        public static void ShellCatchErrors(string processExecutableFilePath, string arguments)
+        {
+            arguments = arguments ?? "";
+            if (string.IsNullOrEmpty(processExecutableFilePath))
+            {
+                throw new ArgumentNullException("processExecutableFilePath");
+            }
+
+            var process = new Process();
+            process.StartInfo.FileName = processExecutableFilePath;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.Arguments = arguments;
+            //process.StartInfo.Verb = "runas";
+            process.Start();
+
+            var error = process.StandardError.ReadToEnd();
+
+            process.WaitForExit();
+            int result = process.ExitCode;
+            process.Close();
+            if (result != 0)
+            {
+                throw new InvalidOperationException(error);
+            }
+        }
+
+        /// <summary>
         /// Execute an external program.
         /// </summary>
         /// <param name="sExecutablePath">Path and filename of the executable.</param>
