@@ -716,6 +716,9 @@ namespace KellermanSoftware.Common
         /// <returns></returns>
         public static string FilterFileName(string fileName, bool allowSpaces)
         {
+            if (string.IsNullOrEmpty(fileName))
+                return string.Empty;
+
             StringBuilder sb = new StringBuilder(fileName.Length);
             string currentChar;
             string sInvalid = "";
