@@ -398,7 +398,7 @@ namespace KellermanSoftware.Common
         /// <returns></returns>
         public static string GetParentDirectory(string fullPath)
         {
-            return Path.GetDirectoryName(ExtractPath(fullPath));
+            return Path.GetDirectoryName(ExtractPath(fullPath).TrimEnd(Path.DirectorySeparatorChar));
         }
 
         /// <summary>
