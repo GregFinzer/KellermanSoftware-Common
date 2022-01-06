@@ -25,7 +25,7 @@
     <AssemblyVersion>1.15.0.0</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Company>Kellerman Software</Company>
-    <Copyright>Copyright 2019 Kellerman Software</Copyright>
+    <Copyright>Copyright © 2022</Copyright>
     <PackageLicenseUrl>https://github.com/GregFinzer/KellermanSoftware-Common/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/GregFinzer/KellermanSoftware-Common</PackageProjectUrl>
     <PackageIconUrl>http://www.kellermanstores.com/Content/images/NuGetIcon.png</PackageIconUrl>
